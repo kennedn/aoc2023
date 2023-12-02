@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-func advent_opener(filename string) ([]string, error) {
+func AdventOpener(filename string) ([]string, error) {
 	f, err := os.Open(filename)
 
 	lines := []string{}
@@ -28,14 +28,14 @@ func advent_opener(filename string) ([]string, error) {
 	return lines, nil
 }
 
-func advent_downloader(day string, year string) ([]string, error) {
+func AdventDownloader(day string, year string) ([]string, error) {
 	if year == "" {
 		year = "2023"
 	}
 
 	filename := fmt.Sprintf("day_%s.txt", day)
 
-	lines, err := advent_opener(filename)
+	lines, err := AdventOpener(filename)
 
 	if err == nil {
 		return lines, err
@@ -78,7 +78,7 @@ func advent_downloader(day string, year string) ([]string, error) {
 
 	io.Copy(f, resp.Body)
 
-	lines, err = advent_opener(filename)
+	lines, err = AdventOpener(filename)
 
 	return lines, err
 }
