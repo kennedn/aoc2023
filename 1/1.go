@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -12,7 +13,12 @@ func one(lines []string) {
 	var firstDigit, lastDigit rune
 	count := 0
 
-	for _, l := range lines {
+	for i, l := range lines {
+
+		re := regexp.MustCompile(`(?:one|two|three|four|five|six|seven|eight|nine|\d)`)
+		matches := re.FindAllString(l, -1)
+		fmt.Printf("%d: %v\n", i, matches)
+
 		lastDigit = -1
 		for _, i := range l {
 			if i >= '0' && i <= '9' {
