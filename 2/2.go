@@ -24,10 +24,7 @@ func one(lines []string) {
 			for _, pair := range strings.Split(set, ", ") {
 				var color string
 				var n int
-				_, err := fmt.Sscanf(pair, "%d %s", &n, &color)
-				if err != nil {
-					break
-				}
+				_, _ = fmt.Sscanf(pair, "%d %s", &n, &color)
 				if n > maxCubes[color] {
 					line_id = 0
 					break
@@ -60,10 +57,7 @@ func two(lines []string) {
 			for _, pair := range strings.Split(set, ", ") {
 				var color string
 				var n int
-				_, err := fmt.Sscanf(pair, "%d %s", &n, &color)
-				if err != nil {
-					break
-				}
+				_, _ = fmt.Sscanf(pair, "%d %s", &n, &color)
 				if n > minCubes[color] {
 					minCubes[color] = n
 				}
