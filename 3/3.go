@@ -78,19 +78,18 @@ func two(lines []string) {
 
 			start_idx := max(0, start-1)
 			end_idx := min(len(lines)-1, j)
-			var gear_coords [][]int
-			gear_coords = append(gear_coords, []int{value, i, start_idx}) // Left char
-			gear_coords = append(gear_coords, []int{value, i, end_idx})   // Right char
-			for k := start_idx; k < end_idx+1; k++ {
-				gear_coords = append(gear_coords, []int{value, max(0, i-1), k})            // Above line
-				gear_coords = append(gear_coords, []int{value, min(len(lines)-1, i+1), k}) // Below line
-			}
 
-			for _, g := range gear_coords {
-				if lines[g[1]][g[2]] == '*' {
-					gears = append(gears, g)
+			for l := i - 1; l <= i+1; l++ {
+				for k := start_idx; k < end_idx+1; k++ {
+					if l < 0 || l > len(lines)-1 {
+						continue
+					}
+					if lines[l][k] == '*' {
+						gears = append(gears, []int{value, l, k})
+					}
 				}
 			}
+
 		}
 	}
 	for i, g1 := range gears {
