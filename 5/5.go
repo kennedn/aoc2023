@@ -60,14 +60,17 @@ func one(lines []string) {
 	fmt.Printf("1 Min: %d\n", min)
 }
 
-func findMinSeed(i int, base int, rng int, converters [][][]int, wg *sync.WaitGroup, resultChan chan<- int) {
+func findMinSeed(i int, base int, rng int, converters [][][]int, wg *sync.WaitGroup, resultChan chan<- int, printLock *sync.Mutex) {
 	defer wg.Done()
 	var minSeed int
 	minSeed = -1
 	for seed := base; seed < base+rng-1; seed++ {
-		if seed%10000000 == 0 {
-			fmt.Printf("Seed %d: %.0f percent\n", i, float64(seed)/(float64(base+rng-1))*100)
+		printLock.Lock()
+		if seed%1000000 == 0 {
+			fmt.Printf("\033[%d;0H", i+1)
+			fmt.Printf("Seed %.2d: %010d (%.0f%%)      ", i, minSeed, float64(seed)/(float64(base+rng-1))*100)
 		}
+		printLock.Unlock()
 		var seedCandidate int
 		seedCandidate = seed
 		for _, section := range converters {
@@ -83,6 +86,10 @@ func findMinSeed(i int, base int, rng int, converters [][][]int, wg *sync.WaitGr
 			minSeed = seedCandidate
 		}
 	}
+	printLock.Lock()
+	fmt.Printf("\033[%d;0H", i+1)
+	fmt.Printf("Seed %.2d: %d                                                     ", i, minSeed)
+	printLock.Unlock()
 	resultChan <- minSeed
 }
 
@@ -115,13 +122,17 @@ func two(lines []string) {
 		}
 	}
 
+	// Clear screen
+	fmt.Print("\033[H\033[2J")
+
 	var wg sync.WaitGroup
+	var printLock sync.Mutex
 	resultChan := make(chan int, len(seeds)/2)
 	for i := 0; i < len(seeds); i += 2 {
 		base := seeds[i]
 		rng := seeds[i+1]
 		wg.Add(1)
-		go findMinSeed(i/2, base, rng, converters, &wg, resultChan)
+		go findMinSeed(i/2, base, rng, converters, &wg, resultChan, &printLock)
 	}
 
 	go func() {
@@ -137,7 +148,8 @@ func two(lines []string) {
 		}
 	}
 
-	fmt.Printf("\n\n2 Min: %d\n", minSeed)
+	fmt.Printf("\033[%d;0H", 11)
+	fmt.Printf("2 Min: %d\n", minSeed)
 }
 
 func main() {
