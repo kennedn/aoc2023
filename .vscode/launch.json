@@ -10,8 +10,7 @@
             "request": "launch",
             "mode": "auto",
             "program": "${file}",
-            "envFile": "${workspaceFolder}/.env",
-            "console": "integratedTerminal"
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }
