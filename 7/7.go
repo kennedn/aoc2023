@@ -126,26 +126,6 @@ func highCard(s string) bool {
 	return len(seen) == 5
 }
 
-func multiCard(card string, cardFunc func(s string) bool) bool {
-	multiCards := []string{card}
-	for _, v := range card {
-		if v == 'J' {
-			for _, mc := range multiCards {
-				for _, v2 := range []rune{'A', 'K', 'Q', 'T', '9', '8', '7', '6', '5', '4', '3', '2', 'J'} {
-					multiCards = append(multiCards, strings.Replace(mc, "J", string(v2), 1))
-				}
-			}
-		}
-	}
-	for _, mc := range multiCards {
-		if cardFunc(mc) {
-			return true
-		}
-
-	}
-	return false
-}
-
 func one(lines []string) {
 
 	strengthMap := map[rune]int{
@@ -241,22 +221,38 @@ func two(lines []string) {
 	}
 
 	for i, c := range cards {
-		card := c[0].(string)
+		multiCards := []string{c[0].(string)}
+		for _, v := range c[0].(string) {
+			if v == 'J' {
+				for _, mc := range multiCards {
+					for _, v2 := range []rune{'A', 'K', 'Q', 'T', '9', '8', '7', '6', '5', '4', '3', '2', 'J'} {
+						multiCards = append(multiCards, strings.Replace(mc, "J", string(v2), 1))
+					}
+				}
+			}
+		}
 		val := 0
-		if multiCard(card, fiveOfAKind) {
-			val = 6
-		} else if multiCard(card, fourOfAKind) {
-			val = 5
-		} else if multiCard(card, fullHouse) {
-			val = 4
-		} else if multiCard(card, threeOfAKind) {
-			val = 3
-		} else if multiCard(card, twoPair) {
-			val = 2
-		} else if multiCard(card, onePair) {
-			val = 1
-		} else if multiCard(card, highCard) {
-			val = 0
+		for _, mc := range multiCards {
+			card := mc
+			tmpVal := 0
+			if fiveOfAKind(card) {
+				tmpVal = 6
+			} else if fourOfAKind(card) {
+				tmpVal = 5
+			} else if fullHouse(card) {
+				tmpVal = 4
+			} else if threeOfAKind(card) {
+				tmpVal = 3
+			} else if twoPair(card) {
+				tmpVal = 2
+			} else if onePair(card) {
+				tmpVal = 1
+			} else if highCard(card) {
+				tmpVal = 0
+			}
+			if tmpVal > val {
+				val = tmpVal
+			}
 		}
 		cards[i] = append(cards[i], val)
 	}
