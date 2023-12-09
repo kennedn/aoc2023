@@ -66,7 +66,7 @@ func LCM(numbers ...int) int {
 
 func two(lines []string) {
 	inst := lines[0]
-	dirs := make(map[string][]string)
+	dirs := map[string][]string{}
 	ptrs := []string{}
 	for _, l := range lines[2:] {
 		raw := strings.Split(l, " = ")
